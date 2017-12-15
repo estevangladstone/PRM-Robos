@@ -18,7 +18,7 @@ public class Graph {
 
 	private Dictionary<GameObject, GameObject[]> vertices = new Dictionary<GameObject, GameObject[]>();
 	private List<GameObject> path = null;
-	private int currentVertexIndex = null;
+//	private int currentVertexIndex = null;
 
 	public void AddVertex(GameObject vertex, GameObject[] neighbors)
 	{
@@ -27,7 +27,7 @@ public class Graph {
 
 	public List<GameObject> shortest_path(GameObject start, GameObject finish) // Recebe o ROBO e o GOAL
 	{
-		var previous = new Dictionary<GameObject, GameObject>();
+/*		var previous = new Dictionary<GameObject, GameObject>();
 		var distances = new Dictionary<GameObject, float>();
 		var nodes = new List<GameObject>();
 
@@ -70,17 +70,18 @@ public class Graph {
 			}
 		}
 
-		return path;
+*/		return path;
 	}
 
 	public Vector3 nextVertexPosition ()
 	{
-		if(currentVertexIndex == null) {
+		return Vector3.zero;
+/*		if(currentVertexIndex == null) {
 			currentVertexIndex = 0;
 		} else {
 			currentVertexIndex = currentVertexIndex + 1;
 		}
 		return path[currentVertexIndex].transform.position;
-	}
+*/	}
 
 }

@@ -2,43 +2,44 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RobotController : MonoBehaviour {
-
-	public float speed;
-
+public class RobotController : MonoBehaviour
+{
+	public float movementSpeed;
 	private Rigidbody rb;
 
-	private Graph graph;
-	private Vector3 target;
-
-	void Start ()
+	private Vector3 initialPosition;
+	
+	void Start()
 	{
 		rb = GetComponent<Rigidbody>();
+		initialPosition = transform.position;
 	}
 
-	void FixedUpdate ()
+	public void ResetRobot()
 	{
-		float moveHorizontal = Input.GetAxis("Horizontal");
-		float moveVertical = Input.GetAxis("Vertical");
+		StopAllCoroutines();
+		transform.position = initialPosition;
+	}
+	
+	public void GetPathAndMoveToExit()
+	{
+		var path = SensorManager.Instance.GetPathToExit();
 
-		Vector3 movement = new Vector3 (moveHorizontal, 0.0f, moveVertical);
-
-		rb.AddForce (movement * speed);
+		StartCoroutine(WalkPath(path));
 	}
 
-	void WalkPath ()
+	IEnumerator WalkPath(List<Transform> path)
 	{
-		if(transform.position == target) {
-			target = graph.nextVertexPosition();
+		foreach (var t in path)
+		{
+			var dir = t.position - transform.position;
+			transform.forward = dir;
+
+			while (Vector3.Distance(t.position, transform.position) > 0.1f)
+			{
+				rb.MovePosition(Vector3.MoveTowards(transform.position, t.position, movementSpeed * Time.deltaTime));
+				yield return null;
+			}
 		}
-		float step = speed * Time.deltaTime;
-		transform.position = Vector3.MoveTowards(transform.position, target, step);
 	}
-
-	void createGraph ()
-	{
-		graph = new Graph();
-//		foreach (GameObject sensor in sensors){}
-	}
-
 }
